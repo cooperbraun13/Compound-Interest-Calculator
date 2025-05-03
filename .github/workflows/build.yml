@@ -18,25 +18,11 @@ jobs:
     
     - name: Test Docker image
       run: |
-        # Run container in the background
         docker run -d -p 5000:5000 --name test-container compound-interest-calculator:latest
-        
-        # Give the container time to fully start
-        echo "Waiting for container to start..."
-        sleep 20
-        
-        # Check if container is running
-        echo "Container status:"
-        docker ps | grep test-container || echo "Container not running"
-        
-        # Check container logs to debug startup issues
-        echo "Container logs:"
-        docker logs test-container
-        
-        # Verify the application is running with a more robust health check
-        echo "Testing application health..."
-        curl --max-time 30 --retry 5 --retry-delay 3 --retry-all-errors --connect-timeout 5 http://localhost:5000/ || echo "Could not connect"
-        
-        # Cleanup
-        docker stop test-container || true
-        docker rm test-container || true
+        # Wait for container to start
+        sleep 10
+        # Use curl with retries to test the container
+        curl --retry 5 --retry-delay 2 --retry-connrefused http://localhost:5000/
+        # Stop container
+        docker stop test-container
+        docker rm test-container
