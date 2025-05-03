@@ -75,17 +75,16 @@ def test_continuous_compounding():
     Test calculation with many compounding periods (approximating continuous).
     """
     result = calculate_compound_interest(1000, 5, 5, 365)
-    # Compare with a high compounding frequency
-    assert round(result['amount'], 2) == 1284.03
-    assert round(result['interest'], 2) == 284.03
+    assert round(result['amount'], 2) == 1284.00
+    assert round(result['interest'], 2) == 284.00
 
 def test_high_interest_rate():
     """
     Test calculation with a high interest rate.
     """
     result = calculate_compound_interest(1000, 20, 5, 12)
-    assert round(result['amount'], 2) == 2713.49
-    assert round(result['interest'], 2) == 1713.49
+    assert round(result['amount'], 2) == 2695.97
+    assert round(result['interest'], 2) == 1695.97
 
 def test_long_time_period():
     """
