@@ -1,0 +1,41 @@
+name: Package and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Build Docker image
+      run: |
+        docker build -t compound-interest-calculator:latest .
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Push Docker image
+      run: |
+        IMAGE_ID=ghcr.io/${{ github.repository_owner }}/compound-interest-calculator
+        
+        # Change all uppercase to lowercase
+        IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+        
+        # Strip git ref prefix from version
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        
+        # Use Docker `latest` tag convention
+        [ "$VERSION" == "main" ] && VERSION=latest
+        
+        echo IMAGE_ID=$IMAGE_ID
+        echo VERSION=$VERSION
+        
+        docker tag compound-interest-calculator:latest $IMAGE_ID:$VERSION
+        docker push $IMAGE_ID:$VERSION
