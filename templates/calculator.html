@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compound Interest Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --primary-color-light: #a29bfe;
+            --accent-color: #00cec9;
+            --text-color: #2d3436;
+            --text-color-light: #636e72;
+            --bg-color: #f9f9f9;
+            --result-bg: #e6f7ff;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --input-border: #dfe6e9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #dff9fb 0%, #c7ecee 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-light) 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+            outline: none;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color-light) 100%);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(108, 92, 231, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .results {
+            background-color: var(--result-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .results::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+        }
+        
+        .results h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            font-weight: 500;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .big-result {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary-color);
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Compound Interest Calculator</h1>
+            <p>Plan your investments with precision</p>
+        </div>
+        
+        <div class="form-container">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="principal">Principal Amount ($)</label>
+                    <input type="number" id="principal" name="principal" step="0.01" min="0" required value="{{ result.principal if result else '1000' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="rate">Annual Interest Rate (%)</label>
+                    <input type="number" id="rate" name="rate" step="0.01" min="0" required value="{{ result.rate if result else '5' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="time">Time Period (years)</label>
+                    <input type="number" id="time" name="time" step="0.01" min="0" required value="{{ result.time if result else '5' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="compounds">Compounds per Year</label>
+                    <input type="number" id="compounds" name="compounds" min="1" required value="{{ result.compounds if result else '12' }}">
+                </div>
+                
+                <button type="submit" class="btn">Calculate Interest</button>
+            </form>
+            
+            {% if result %}
+            <div class="results">
+                <h2>Your Investment Results</h2>
+                
+                <div class="result-item">
+                    <span class="result-label">Principal Amount:</span>
+                    <span class="result-value">${{ "%.2f"|format(result.principal) }}</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Annual Interest Rate:</span>
+                    <span class="result-value">{{ "%.2f"|format(result.rate) }}%</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Time Period:</span>
+                    <span class="result-value">{{ "%.1f"|format(result.time) }} years</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Compounding:</span>
+                    <span class="result-value">{{ result.compounds }} times per year</span>
+                </div>
+                
+                <div class="result-item">
+                    <span class="result-label">Interest Earned:</span>
+                    <span class="result-value">${{ "%.2f"|format(result.interest) }}</span>
+                </div>
+                
+                <div class="big-result">
+                    Final Amount: ${{ "%.2f"|format(result.amount) }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
