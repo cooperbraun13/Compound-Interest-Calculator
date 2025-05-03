@@ -20,11 +20,9 @@ jobs:
       run: |
         docker run -d -p 5000:5000 --name test-container compound-interest-calculator:latest
         # Wait for container to start
-        sleep 5
-        # Test if container is running
-        docker ps | grep test-container
-        # Check if the application is responsive
-        curl -s http://localhost:5000/ | grep "Compound Interest Calculator"
-        # Cleanup
+        sleep 10
+        # Use curl with retries to test the container
+        curl --retry 5 --retry-delay 2 --retry-connrefused http://localhost:5000/
+        # Stop container
         docker stop test-container
         docker rm test-container

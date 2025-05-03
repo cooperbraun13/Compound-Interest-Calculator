@@ -8,8 +8,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 RUN pip install -e .
 
-ENV FLASK_APP=app
-ENV FLASK_ENV=production
+ENV PYTHONPATH=/app
+
+RUN adduser --disabled-password --gecos '' appuser
+USER appuser
 
 EXPOSE 5000
 

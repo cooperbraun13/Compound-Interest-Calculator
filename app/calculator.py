@@ -6,8 +6,7 @@ def calculate_compound_interest(principal, rate, time, compounds):
     """
     Calculate compound interest with the given parameters.
     """
-    # Convert percentage to decimal
-    rate = rate / 100
+    rate = rate / 100  # Convert percentage to decimal
     amount = principal * (1 + rate/compounds)**(compounds*time)
     interest = amount - principal
     

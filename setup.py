@@ -9,4 +9,5 @@ setup(
         'flask',
         'gunicorn',
     ],
+    python_requires='>=3.6',
 )

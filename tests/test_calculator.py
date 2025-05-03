@@ -1,4 +1,5 @@
 import pytest
+from flask import Flask
 from app.calculator import calculate_compound_interest
 from app import create_app
 

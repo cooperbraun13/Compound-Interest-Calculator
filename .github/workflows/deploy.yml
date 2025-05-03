@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -28,11 +32,8 @@ jobs:
         # Change all uppercase to lowercase
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         
-        # Strip git ref prefix from version
-        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-        
         # Use Docker `latest` tag convention
-        [ "$VERSION" == "main" ] && VERSION=latest
+        VERSION=latest
         
         echo IMAGE_ID=$IMAGE_ID
         echo VERSION=$VERSION
